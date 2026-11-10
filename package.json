@@ -6,11 +6,11 @@
   "author": "Rinai-R",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Rinai-R/dsh-omp-retry.git"
+    "url": "git+https://github.com/dsh-labs/dsh-omp-retry.git"
   },
-  "homepage": "https://github.com/Rinai-R/dsh-omp-retry#readme",
+  "homepage": "https://github.com/dsh-labs/dsh-omp-retry#readme",
   "bugs": {
-    "url": "https://github.com/Rinai-R/dsh-omp-retry/issues"
+    "url": "https://github.com/dsh-labs/dsh-omp-retry/issues"
   },
   "type": "module",
   "main": "./dist/index.js",

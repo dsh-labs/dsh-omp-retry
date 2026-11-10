@@ -54,7 +54,7 @@ Both:
 ## Install
 
 ```sh
-dsh plugin --profile desktop add github:Rinai-R/dsh-omp-retry
+dsh plugin --profile desktop add github:dsh-labs/dsh-omp-retry
 ```
 
 Use your profile name instead of `desktop` for a web or custom profile, then
