@@ -108,11 +108,38 @@ while the bundle is active it takes 429s first.
 
 ## Compatibility
 
-Verified against DSH Desktop `0.2.1-rc.5`. The plugin relies on:
+Verified against DSH Desktop `0.2.2-rc.2` and `0.2.2-rc.1`, and previously
+against `0.2.1-rc.5`. The bundle declares the range it supports, and DSH refuses
+to install or start a bundle whose `engines.dsh` range the running release does
+not satisfy:
 
-- the `agent/request-error` waterfall,
-- the `llm-retry` session projection (`llmRetry`),
-- the `llm/retry` event shape used by the built-in retry executor.
+```json
+"engines": { "dsh": ">=0.2.1-rc.5 <0.3.0-0" }
+```
+
+The plugin relies on three internal contracts:
+
+- the `agent/request-error` waterfall payload (`failure.code`,
+  `failure.message`, `failure.providerRetryAfterMs`, `retryPolicy`, `signal`),
+- the `llm-retry` session projection (`llmRetry`), read through
+  `ctx.sessionProjections.stateOf(session, 'llmRetry')`,
+- the `llm/retry` and `llm/retry-started` events the built-in retry executor
+  writes and the `llmRetry` projection folds.
+
+All three are unchanged between `0.2.2-rc.1` and `0.2.2-rc.2`: the payload type,
+the projection key and `stateOf` signature, and `dsh-llm-retry`'s implementation
+are identical. `RATE_LIMIT` is still a built-in transient code — still in the
+default `retryableCodes` and still marked `retryChoice` — so the 429 path is
+unaffected. Three `0.2.2-rc.2` changes touch neighbouring ground without
+changing this bundle:
+
+- `Session.append` gained an array overload; the single-event form this bundle
+  calls still works.
+- pi-ai now drops stale signed thinking blocks on Anthropic Messages routes
+  before sending, so binding rejections become rarer there; the policy still
+  covers gateways and other protocols that return the 400 verbatim.
+- model-request failures now keep `ATTACHMENT_*` codes instead of `UNKNOWN`;
+  those failures were already delegated and stay delegated.
 
 If a future DSH changes those contracts, the plugin may need an update; it fails
 closed by delegating to the next listener.
